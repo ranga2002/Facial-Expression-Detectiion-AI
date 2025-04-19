@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block title %}About Our Project{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+<!-- Introduction -->
+<div data-aos="fade-up" class="mb-5 text-center">
+<h1 class="display-5 fw-bold">About the Emotion Recognition Project</h1>
+<p class="lead">Using AI for personalized emotion insights & wellbeing support.</p>
+</div>
+
+<!-- Project Overview -->
+<div class="row align-items-center">
+    <div class="col-md-6 text-center">
+        <img src="https://img.freepik.com/free-vector/emotions-concept-illustration_114360-4870.jpg" alt="Project Chart" class="img-fluid" style="max-height: 280px;">
+    </div>
+    <div class="col-md-6">
+        <h4 class="fw-bold">What We Built</h4>
+        <p>Our capstone project applies CNN, VGG16, and ResNet models on FER & AffectNet datasets to recognize emotions like:</p>
+        <ul>
+            <li>😊 Happiness, 😡 Anger, 😢 Sadness, 😱 Surprise, etc.</li>
+            <li>🔍 Cleaned & relabeled noisy data using DeepFace</li>
+            <li>🧪 Hybrid augmentation: flip, noise, brightness</li>
+            <li>🧠 GPT-4o mental health assistant for users</li>
+            <li>⚙️ Custom CNN with dead filter reactivation</li>
+        </ul>
+    </div>
+</div>
+
+<br>
+<!-- Project Goals -->
+<div class="row mb-5" data-aos="fade-up">
+    <div class="col text-center">
+        <h3 class="mb-3">🎯 Our Vision & Goals</h3>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-brain fa-2x text-primary mb-3"></i>
+                        <h5 class="card-title">Enhance Emotional Intelligence</h5>
+                        <p class="card-text">Leverage AI to help individuals better understand and manage their emotions.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-heartbeat fa-2x text-danger mb-3"></i>
+                        <h5 class="card-title">Personalized Mental Health</h5>
+                        <p class="card-text">Provide tailored recommendations to support users' mental well-being.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-2x text-success mb-3"></i>
+                        <h5 class="card-title">Inclusive Emotional Growth</h5>
+                        <p class="card-text">Create a platform that fosters emotional growth and inclusivity for all.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Professor Details -->
+<div class="row mb-5" data-aos="fade-up">
+    <div class="col text-center">
+        <h3 class="mb-4">👨‍🏫 Faculty Advisor</h3>
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-chalkboard-teacher fa-2x text-primary mb-3"></i>
+                <h5 class="card-title">Dr. ANK Zaman (He/Him/His)</h5>
+                <p class="text-muted">Professor</p>
+                <p class="fw-light">School of Applied Computer Science & Information Technology</p>
+                <p class="text-muted">Email: <a href="mailto:azaman@conestogac.on.ca">azaman@conestogac.on.ca</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Team -->
+<div class="mb-5" data-aos="fade-up">
+    <h3 class="text-center mb-4">👩‍💻 Meet the Team</h3>
+    <div class="row g-3">
+        <div class="col-md-4 text-center">
+            <i class="fas fa-user-graduate fa-2x text-primary mb-2"></i>
+            <h5>Sri Ranga Bharadwaj Chakilam</h5>
+            <p class="text-muted">schakilam7538@conestogac.on.ca</p>
+            <p class="fw-light">Team Lead & AI/ML Developer</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-user-graduate fa-2x text-primary mb-2"></i>
+            <h5>Srilekha Kamineni</h5>
+            <p class="text-muted">skamineni1265@conestogac.on.ca</p>
+            <p class="fw-light">Frontend Developer</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-user-graduate fa-2x text-primary mb-2"></i>
+            <h5>Sai Kumar Gattu</h5>
+            <p class="text-muted">sgattu3743@conestogac.on.ca</p>
+            <p class="fw-light">Backend Developer</p>
+        </div>
+    </div>
+</div>
+
+<!-- Timeline / Version -->
+<div class="row mb-5" data-aos="zoom-in">
+    <div class="col-md-8 offset-md-2">
+      <div class="card border-0 shadow-lg p-4 bg-white text-dark">
+        <h5 class="text-center fw-bold mb-3">
+          <i class="fas fa-code-branch text-primary"></i> Project Snapshot
+        </h5>
+  
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item bg-white">
+            <i class="fas fa-calendar-alt text-secondary me-2"></i>
+            <strong>Last Build:</strong>
+            <span class="badge bg-light text-dark">{% now "F j, Y - H:i" %}</span>
+          </li>
+          <li class="list-group-item bg-white">
+            <i class="fas fa-database text-secondary me-2"></i>
+            <strong>Dataset:</strong> <span class="badge bg-info text-dark">FER2013</span>
+          </li>
+          <li class="list-group-item bg-white">
+            <i class="fas fa-microchip text-secondary me-2"></i>
+            <strong>Models:</strong> CNN, VGG16, ResNet
+          </li>
+          <li class="list-group-item bg-white">
+            <i class="fas fa-tools text-secondary me-2"></i>
+            <strong>Tech Stack:</strong>
+            <span class="badge bg-dark">Django</span>
+            <span class="badge bg-primary">OpenAI API</span>
+            <span class="badge bg-warning text-dark">TensorFlow</span>
+          </li>
+        </ul>
+  
+        <div class="text-center mt-4 d-flex justify-content-center gap-2 flex-wrap">
+          <a href="https://github.com/your-repo" target="_blank" class="btn btn-outline-dark">
+            <i class="fab fa-github me-1"></i> GitHub Repository
+          </a>
+          <!-- <a href="#" class="btn btn-outline-primary">
+            <i class="fas fa-road me-1"></i> Changelog / Roadmap
+          </a> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+<!-- Newsletter (optional placeholder) -->
+<div class="row justify-content-center" data-aos="zoom-in">
+<div class="col-md-8">
+    <div class="card text-dark shadow">
+        <div class="card-body text-center">
+            <h5 class="card-title"><i class="fas fa-envelope"></i> Stay in the Loop</h5>
+            <p class="card-text">Subscribe to updates about our AI tools and future projects.</p>
+            <form class="row g-2 justify-content-center">
+                <div class="col-md-6">
+                    <input type="email" class="form-control" placeholder="Enter your email" required>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Subscribe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+
+<!-- AOS animation library -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+AOS.init();
+</script>
+{% endblock %}

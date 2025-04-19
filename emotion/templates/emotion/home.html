@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Welcome to Emotion Recognition{% endblock %}
+
+{% block content %}
+<!-- AOS Animation -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<!-- Animate.css CDN for modal entrance -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>AOS.init();</script>
+
+<div class="container text-center py-5">
+    <div class="row align-items-center">
+        <div class="col-md-6" data-aos="fade-right">
+            <h1 class="display-4 fw-bold">Explore Your Emotions with AI</h1>
+            <p class="lead">Discover the power of artificial intelligence in understanding your emotional well-being through facial recognition and self-assessment.</p>
+            <a href="{% url 'analyze' %}" class="btn btn-primary btn-lg mt-3">
+                <i class="fas fa-smile-wink"></i> Start Emotion Check
+            </a>
+        </div>
+        <div class="col-md-6" data-aos="fade-left">
+            <img src="https://cdni.iconscout.com/illustration/premium/thumb/man-showing-emotion-intelligent-analysis-illustration-download-in-svg-png-gif-file-formats--analytics-logo-positive-attitude-competitive-pack-business-illustrations-9249105.png?f=webp" alt="AI Emotion" class="img-fluid rounded shadow-lg">
+        </div>
+    </div>
+
+    <br>
+    <!-- Features -->
+    <div class="row mt-5" data-aos="fade-up">
+        <div class="col text-center">
+            <h2>Features</h2>
+            <p class="text-muted">Discover the unique capabilities of our platform designed to enhance your emotional well-being.</p>
+        </div>
+    </div>
+
+    <div class="row g-4" data-aos="fade-up">
+        <div class="col-md-4">
+            <div class="card h-100 shadow text-center">
+                <div class="card-body">
+                    <i class="fas fa-brain fa-3x text-primary mb-3"></i>
+                    <h5>AI Emotion Detection</h5>
+                    <p>Our advanced AI models analyze facial expressions to accurately detect your emotions.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow text-center">
+                <div class="card-body">
+                    <i class="fas fa-comments fa-3x text-success mb-3"></i>
+                    <h5>OpenAI Mental Chat</h5>
+                    <p>Engage in meaningful conversations with our AI assistant for mental health support.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow text-center">
+                <div class="card-body">
+                    <i class="fas fa-heartbeat fa-3x text-danger mb-3"></i>
+                    <h5>Self Awareness Boost</h5>
+                    <p>Track your emotions over time and gain insights to improve your overall well-being.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="row mt-5" data-aos="fade-up">
+        <div class="col text-center">
+            <h2>How It Works</h2>
+            <p class="text-muted">We combine computer vision, emotional AI, and mental health prompts to provide a deeper understanding of your emotional state.</p>
+        </div>
+    </div>
+
+    <div class="row g-4" data-aos="fade-up">
+        <div class="col-md-4">
+            <div class="card h-100 shadow text-center">
+                <div class="card-body">
+                    <i class="fas fa-upload fa-3x text-primary mb-3"></i>
+                    <h5>Upload</h5>
+                    <p>Submit a front-facing image and answer a few questions to begin your emotional journey.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow text-center">
+                <div class="card-body">
+                    <i class="fas fa-robot fa-3x text-primary mb-3"></i>
+                    <h5>AI Analysis</h5>
+                    <p>Our intelligent system detects your facial expression and evaluates your answers using GPT-4o.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow text-center">
+                <div class="card-body">
+                    <i class="fas fa-heartbeat fa-3x text-primary mb-3"></i>
+                    <h5>Insights</h5>
+                    <p>Get suggestions, mental health tips, and access to our AI-based support chat assistant.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5" data-aos="fade-up">
+        <h3>Ready to Begin?</h3>
+        <p class="text-muted">Let's explore how you're really feeling today.</p>
+        <a href="{% url 'analyze' %}" class="btn btn-success btn-lg"><i class="fas fa-search"></i> Analyze My Emotion</a>
+    </div>
+</div>
+
+<!-- Chatbot Modal -->
+{% include 'emotion/chat_modal.html' %}
+
+{% endblock %}

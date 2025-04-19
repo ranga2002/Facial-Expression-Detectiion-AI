@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Emotion Recognition{% endblock %}</title>
+
+  <!-- FontAwesome + Google Fonts + Animate.css + Bootstrap + AOS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+
+  <style>
+    body[data-theme='dark'] {
+    background-color: #1a1a2e;
+    color: #f1f1f1;
+    }
+    body[data-theme='dark'] .card {
+    background-color: #252845;
+    color: #fff;
+    }
+    body[data-theme='dark'] .navbar, 
+    body[data-theme='dark'] .footer {
+    background-color: #0f0f25;
+    }
+    body[data-theme='dark'] .chat-assistant {
+    background-color: #44475a;
+    color: #f1f1f1;
+    }
+    body[data-theme='dark'] .chat-user {
+    background-color: #6272a4;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f0f2f5;
+      color: #1f2937;
+    }
+
+    .navbar {
+      background-color: #4f46e5;
+    }
+
+    .navbar-brand, .nav-link {
+      color: #fff !important;
+    }
+
+    .btn-primary {
+      background-color: #4f46e5;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #4338ca;
+    }
+
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      background-color: #ffffff;
+    }
+
+    .chat-bubble {
+      max-width: 75%;
+      padding: 10px 15px;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+
+    .chat-user {
+      background-color: #4f46e5;
+      color: white;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .chat-assistant {
+      background-color: #e5e7eb;
+      color: #1f2937;
+    }
+
+    .footer {
+      background-color: #4f46e5;
+      color: #fff;
+      padding: 1rem;
+      margin-top: 4rem;
+    }
+
+    #chatbot-icon {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      cursor: pointer;
+      z-index: 1000;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-15px); }
+      60% { transform: translateY(-7px); }
+    }
+
+    .chat-box {
+      max-height: 300px;
+      overflow-y: auto;
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    .form-control, .btn {
+      border-radius: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'home' %}">Emotion Recognition</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'analyze' %}">Analyze Emotion</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+          <li class="nav-item">
+            <button id="theme-toggle" class="btn btn-sm btn-light ms-3">
+              <i class="fas fa-moon"></i>
+            </button>
+          </li>          
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container py-4">{% block content %}{% endblock %}</div>
+
+  <!-- Footer -->
+  <footer class="footer text-center">
+    <p>&copy; 2025 Emotion Recognition. All rights reserved.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script>
+
+  let stream;
+  
+    // 📷 Open webcam when modal shows
+    document.getElementById('cameraModal')?.addEventListener('shown.bs.modal', function () {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(s => {
+          stream = s;
+          document.getElementById('video').srcObject = stream;
+        })
+        .catch(err => alert("Camera access denied or not supported."));
+    });
+  
+    // ❌ Stop webcam when modal hides
+    document.getElementById('cameraModal')?.addEventListener('hidden.bs.modal', function () {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+    });
+  
+    // 📸 Capture photo from video feed
+    function capturePhoto() {
+      const video = document.getElementById('video');
+      const canvas = document.getElementById('canvas');
+      const context = canvas.getContext('2d');
+  
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const dataURL = canvas.toDataURL('image/png');
+      document.getElementById('captured_image').value = dataURL;
+  
+      // Show toast
+      const toast = document.createElement("div");
+      toast.className = "toast align-items-center text-white bg-success border-0 show position-fixed bottom-0 end-0 m-3";
+      toast.setAttribute("role", "alert");
+      toast.innerHTML = `
+        <div class="d-flex">
+          <div class="toast-body">Image captured successfully</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>`;
+      document.body.appendChild(toast);
+  
+      // Auto-close modal
+      bootstrap.Modal.getInstance(document.getElementById('cameraModal')).hide();
+    }
+  
+    // 🎚️ Live age value update
+    document.addEventListener("DOMContentLoaded", () => {
+      const ageInput = document.querySelector('input[type="range"][name="age"]');
+      const ageDisplay = document.getElementById("ageValue");
+      if (ageInput && ageDisplay) {
+        ageDisplay.textContent = ageInput.value;
+        ageInput.addEventListener("input", () => {
+          ageDisplay.textContent = ageInput.value;
+        });
+      }
+    });
+  
+    document.addEventListener("DOMContentLoaded", function () {
+      AOS.init(); // Animate on scroll
+  
+      // 🌙 Theme toggle
+      const toggle = document.getElementById("theme-toggle");
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "dark") {
+        document.body.setAttribute("data-theme", "dark");
+      }
+      toggle?.addEventListener("click", () => {
+        const isDark = document.body.getAttribute("data-theme") === "dark";
+        document.body.setAttribute("data-theme", isDark ? "light" : "dark");
+        localStorage.setItem("theme", isDark ? "light" : "dark");
+      });
+  
+    // 💬 Chat modal toggle
+    const chatIcon = document.getElementById("chatbot-icon");
+    const chatModalEl = document.getElementById("chatModal");
+    const chatModal = chatModalEl ? new bootstrap.Modal(chatModalEl) : null;
+    chatIcon?.addEventListener("click", () => {
+      chatModal?.show();
+    });
+  
+    // 🧠 Chat logic
+    const chatLog = document.getElementById("chat-log");
+    const chatForm = document.getElementById("chat-form");
+    const chatInput = document.getElementById("chat-input");
+  
+    // 🧩 Quick reply buttons
+    document.querySelectorAll(".emotion-trigger").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const msg = btn.dataset.message;
+        if (msg) sendMessage(msg);
+      });
+    });
+  
+    // ✉️ Chat form submission
+    chatForm?.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const msg = chatInput.value.trim();
+      if (msg) {
+        sendMessage(msg);
+        chatInput.value = "";
+      }
+    });
+  
+    // 🔒 Escape unsafe HTML
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.appendChild(document.createTextNode(text));
+      return div.innerHTML;
+    }
+
+    function sendMessage(message) {
+      if (!chatLog) return;
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+  
+      // Show user message
+      chatLog.innerHTML += `
+          <div class="d-flex justify-content-end mb-3">
+              <div class="chat-bubble bg-primary text-white p-3 rounded shadow-sm">
+                  <strong>You:</strong><br> ${escapeHtml(message)}
+                  <div class="timestamp mt-1 text-muted small">${new Date().toLocaleTimeString()}</div>
+              </div>
+          </div>`;
+      chatLog.scrollTop = chatLog.scrollHeight;
+  
+      // Typing indicator
+      if (!document.getElementById("typing")) {
+          chatLog.innerHTML += `
+              <div id="typing" class="d-flex justify-content-start mb-3">
+                  <div class="chat-bubble bg-light text-dark p-3 rounded shadow-sm">
+                      <em>Typing...</em>
+                  </div>
+              </div>`;
+          chatLog.scrollTop = chatLog.scrollHeight;
+      }
+  
+      // Fetch assistant response
+      fetch("{% url 'chat_reply' %}", {
+          method: "POST",
+          headers: {
+              "X-CSRFToken": csrfToken,
+              "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: `message=${encodeURIComponent(message)}`
+      })
+          .then(res => res.json())
+          .then(data => {
+              document.getElementById("typing")?.remove();
+              chatLog.innerHTML += `
+                  <div class="d-flex justify-content-start mb-3">
+                      <div class="chat-bubble bg-light text-dark p-3 rounded shadow-sm">
+                          <strong>Assistant:</strong><br> ${escapeHtml(data.reply)}
+                          <div class="timestamp mt-1 text-muted small">${new Date().toLocaleTimeString()}</div>
+                      </div>
+                  </div>`;
+              chatLog.scrollTop = chatLog.scrollHeight;
+          })
+          .catch(err => {
+              document.getElementById("typing")?.remove();
+              chatLog.innerHTML += `
+                  <div class="d-flex justify-content-start mb-3">
+                      <div class="chat-bubble bg-light text-danger p-3 rounded shadow-sm">
+                          <strong>Error:</strong><br> ${err}
+                      </div>
+                  </div>`;
+              chatLog.scrollTop = chatLog.scrollHeight;
+          });
+  }
+  
+    });
+  </script>
+  
+  
+</body>
+</html>

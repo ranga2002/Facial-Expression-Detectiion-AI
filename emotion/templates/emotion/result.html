@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Emotion Results{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="card shadow-lg p-4 mx-auto" style="max-width: 960px;" data-aos="fade-up">
+    
+    <!-- Header -->
+    <h2 class="text-center text-primary mb-3"><i class="fas fa-heartbeat"></i> AI Emotion Analysis</h2>
+    <p class="text-center text-muted fst-italic">“Your emotions matter. Let's understand them better.”</p>
+
+    <!-- Form -->
+    <form method="post" enctype="multipart/form-data" class="row g-4 mb-5 needs-validation" novalidate data-aos="fade-up">
+        {% csrf_token %}
+      
+        <div class="col-md-6 form-floating">
+          {{ form.name }}
+          <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+        </div>
+      
+        <div class="col-md-6 form-floating">
+          {{ form.gender }}
+          <label for="{{ form.gender.id_for_label }}">{{ form.gender.label }}</label>
+        </div>
+      
+        <div class="col-md-6">
+          <label for="{{ form.age.id_for_label }}" class="form-label">Your Age: <span id="ageValue">{{ form.age.value|default:25 }}</span></label>
+          {{ form.age }}
+          <output class="form-text d-block text-muted">Drag the slider above ☝️</output>
+        </div>
+      
+        <div class="col-12">
+          <label class="form-label fw-semibold">{{ form.image.label }}</label>
+          <div class="form-control p-3">
+            {{ form.image }}
+          </div>
+        </div>
+      
+        <div class="col-12 text-center">
+          <label class="form-label fw-semibold">📸 Take a Real-Time Photo</label><br>
+          <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#cameraModal">
+            <i class="fas fa-video"></i> Use Camera
+          </button>
+          <input type="hidden" name="captured_image" id="captured_image">
+        </div>        
+      
+        <div class="col-12" data-aos="fade-right">
+          <label class="form-label fw-semibold">{{ form.question1.label }}</label>
+          {{ form.question1 }}
+        </div>
+      
+        <div class="col-12" data-aos="fade-left">
+          <label class="form-label fw-semibold">{{ form.question2.label }}</label>
+          {{ form.question2 }}
+        </div>
+      
+        <div class="col-12" data-aos="fade-right">
+          <label class="form-label fw-semibold">{{ form.question3.label }}</label>
+          {{ form.question3 }}
+        </div>
+      
+        <div class="col-12" data-aos="fade-left">
+          <label class="form-label fw-semibold">{{ form.question4.label }}</label>
+          {{ form.question4 }}
+        </div>
+      
+        <div class="col-12">
+          <label class="form-label">{{ form.comment.label }}</label>
+          {{ form.comment }}
+        </div>
+      
+        <div class="col-12">
+          <button type="submit" class="btn btn-lg btn-primary w-100 shadow">
+            <i class="fas fa-brain me-2"></i> Analyze My Emotion
+          </button>
+        </div>
+    </form>
+      
+    <!-- Emotion Results -->
+    {% if prediction %}
+    <div class="alert alert-primary shadow-sm" data-aos="zoom-in">
+      <h5><i class="fas fa-smile-beam"></i> Detected Emotion</h5>
+      <h4 class="fw-bold text-capitalize">{{ prediction }}</h4>
+      <p class="mt-2"><i class="fas fa-lightbulb text-warning"></i> <strong>Suggestion:</strong> {{ suggestion }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Score and Insight -->
+    {% if openai_response %}
+    <div class="card shadow-sm bg-light mb-4" data-aos="fade-up">
+      <div class="card-body">
+        <h5 class="text-primary"><i class="fas fa-comment-dots"></i> AI Mental Health Insight</h5>
+        <p class="mb-1">{{ openai_response }}</p>
+        <span class="badge bg-success mt-2">Wellbeing Score: {{ score }}/15</span>
+        <div class="progress mt-2" style="height: 8px;">
+          <div class="progress-bar bg-info" style="width: {{ percent_score }}%;" role="progressbar" aria-valuenow="{{ percent_score }}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <p class="text-muted mt-2">Your emotional wellbeing score is <strong>{{ percent_score }}%</strong>. Keep striving for balance and positivity!</p>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Image Preview -->
+    {% if image_path %}
+    <div class="text-center mb-4" data-aos="fade-up">
+      <img src="/{{ image_path }}" class="img-fluid rounded border shadow-sm" style="max-height: 240px;" alt="Analyzed Face">
+      <p class="text-muted mt-1">Analyzed Face</p>
+    </div>
+    {% endif %}
+
+    <!-- Self Assessment Summary -->
+    {% if name or gender or age or question1 or question2 or question3 or question4 or comment %}
+    <div class="card bg-white shadow-sm mb-4" data-aos="fade-up">
+      <div class="card-body">
+        <h5 class="text-secondary mb-3"><i class="fas fa-user-check"></i> Your Details</h5>
+        <ul class="list-group list-group-flush">
+          {% if name %}<li class="list-group-item">👤 <strong>Name:</strong> {{ name }}</li>{% endif %}
+          {% if gender %}<li class="list-group-item">⚧️ <strong>Gender:</strong> {{ gender }}</li>{% endif %}
+          {% if age %}<li class="list-group-item">🎂 <strong>Age:</strong> {{ age }}</li>{% endif %}
+          {% if question1 %}<li class="list-group-item">🧠 Q1: {{ question1 }}</li>{% endif %}
+          {% if question2 %}<li class="list-group-item">💭 Q2: {{ question2 }}</li>{% endif %}
+          {% if question3 %}<li class="list-group-item">👥 Q3: {{ question3 }}</li>{% endif %}
+          {% if question4 %}<li class="list-group-item">🔄 Q4: {{ question4 }}</li>{% endif %}
+          {% if comment %}<li class="list-group-item">📝 Comment: {{ comment }}</li>{% endif %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
+
+    <!-- Chat Interface -->
+    <div class="card shadow-sm bg-light p-3 mt-4" data-aos="fade-up">
+      <h5 class="text-primary mb-3"><i class="fas fa-comments"></i> Chat with AI</h5>
+
+      <!-- Chat log -->
+      <div id="chat-log" class="chat-box p-3 border rounded bg-white text-dark mb-3" style="height: 300px; overflow-y: auto;">
+        {% for msg in chat_messages %}
+          {% if msg.role != "system" %}
+            <div class="d-flex {% if msg.role == 'user' %}justify-content-end{% else %}justify-content-start{% endif %} mb-2">
+              <div class="chat-bubble {% if msg.role == 'user' %}bg-primary text-white{% else %}bg-light text-dark{% endif %} p-2 rounded shadow-sm" style="max-width: 75%;">
+                <strong>{{ msg.role|title }}:</strong><br>{{ msg.content }}
+                {% if msg.timestamp %}
+                  <div class="timestamp small text-muted mt-1">{{ msg.timestamp }}</div>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- Chat input -->
+      <form id="chat-form" class="d-flex">
+        {% csrf_token %}
+        <input type="text" id="chat-input" class="form-control me-2" placeholder="Type a message..." required>
+        <button class="btn btn-primary" type="submit"><i class="fas fa-paper-plane"></i> Send</button>
+      </form>
+
+      <!-- Clear chat -->
+      {% if chat_messages %}
+        <form method="post" class="mt-2 text-end">
+          {% csrf_token %}
+          <button name="clear_chat" value="true" class="btn btn-outline-danger btn-sm">
+            <i class="fas fa-trash-alt"></i> Clear Chat
+          </button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Camera Modal -->
+<div class="modal fade" id="cameraModal" tabindex="-1" aria-labelledby="cameraModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-dark">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title"><i class="fas fa-camera"></i> Capture Real-Time Photo</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <video id="video" width="320" height="240" autoplay class="border rounded shadow-sm"></video>
+        <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+        <div class="mt-3">
+          <button class="btn btn-success" onclick="capturePhoto()">
+            <i class="fas fa-camera-retro"></i> Capture
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
