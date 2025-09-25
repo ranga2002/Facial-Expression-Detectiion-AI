@@ -39,7 +39,7 @@ sortedcontainers==2.4.0
 sqlparse==0.5.3
 tensorboard==2.18.0
 tensorboard-data-server==0.7.2
-tensorflow==2.17.0
+tensorflow
 tensorflow_intel==2.18.0
 termcolor==2.5.0
 trio==0.29.0
